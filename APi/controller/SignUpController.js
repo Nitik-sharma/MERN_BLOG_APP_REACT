@@ -1,4 +1,3 @@
-import { errorHandler } from "../utils/ErrorHandler.js";
 import UserModel from "./../Models/UserModel.js";
 import bycript from "bcryptjs";
 export const SignUp = async (req, res, next) => {
@@ -13,7 +12,10 @@ export const SignUp = async (req, res, next) => {
     email === "" ||
     password === ""
   ) {
-    next(errorHandler(400, "All fields are mandatory"));
+    res.send({
+      status: 400,
+      message: "All fields are mandatory",
+    });
   }
 
   const hashPassword = bycript.hashSync(password, 10);
@@ -31,6 +33,9 @@ export const SignUp = async (req, res, next) => {
       data: userDB,
     });
   } catch (error) {
-    next(error);
+    res.send({
+      status: 500,
+      message: "Something went to wrong",
+    });
   }
 };

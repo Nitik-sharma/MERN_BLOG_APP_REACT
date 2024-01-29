@@ -4,7 +4,7 @@ import { getSignUp } from "../controller/GetSignUp.js";
 
 const router = express.Router();
 
-router.get("/signUp", getSignUp);
+// router.get("/signUp", getSignUp);
 
 router.post("/signUp", SignUp);
 
