@@ -12,6 +12,15 @@ const app = express();
 // middlewear
 
 app.use(express.json());
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  res.send().json({
+    sucess: false,
+    statusCode,
+    message,
+  });
+});
 
 mongoose
   .connect(MONGO_URI)
