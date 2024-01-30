@@ -7,6 +7,7 @@ import Project from "./Pages/Project";
 import SignIn from "./Pages/SignIn";
 import SignUp from "./Pages/SignUp";
 import Header from "./components/Header";
+import Footers from "../src/components/Footers.jsx";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/signIn" element={<SignIn />} />
         <Route path="/signUp" element={<SignUp />} />
       </Routes>
+      <Footers />
     </BrowserRouter>
   );
 }
