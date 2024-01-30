@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 import dotenv from "dotenv";
 import userRouter from "./routes/userRoute.js";
 import signUpRouter from "./routes/authRoute.js";
@@ -10,6 +11,13 @@ const MONGO_URI = process.env.MONGO_URI;
 const PORT = process.env.PORT;
 const app = express();
 // middlewear
+var corsOptions = {
+  origin: "http://localhost:3000",
+  methods: "GET,POST,PUT,DELETE,PATCH,HEAD",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 

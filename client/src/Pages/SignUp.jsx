@@ -1,23 +1,42 @@
-import { Button, Label, TextInput } from "flowbite-react";
+import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+// import axios from "axios";
 function SignUp() {
   const [formData, setFormData] = useState({});
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+  const naviagate = useNavigate();
   const handleData = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
+    if (!formData.username || !formData.email || !formData.password) {
+      setErrorMessage("please fill all the feild");
+    }
+    console.log("hello");
     try {
-      const response = await axios.post("/api/auth/signUp", formData, {
+      const res = await fetch(`http://localhost:5000/api/auth/signup`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
+      const data = await res.json();
+      console.log("data-->", data); // Log the response data
+      if (data.sucess === false) {
+        setErrorMessage(data.message);
+      }
+      setLoading(false);
+      if (res.ok) {
+        naviagate("/signIn");
+      }
 
-      console.log(response.data);
       // Handle the response data as needed
     } catch (error) {
-      // Handle errors
+      setErrorMessage(error.message);
     }
   };
   return (
@@ -67,7 +86,14 @@ function SignUp() {
               />
             </div>
             <Button gradientDuoTone={"purpleToPink"} type="submit">
-              SignUp
+              {loading ? (
+                <>
+                  <Spinner size={"sm"} />
+                  <span className=" pl-3">loading...</span>
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </form>
           <div className=" flex gap-2 mt-4 text-sm">
@@ -76,6 +102,11 @@ function SignUp() {
               SignIn
             </Link>
           </div>
+          {errorMessage && (
+            <Alert className=" mt-5" color={"failure"}>
+              {errorMessage}
+            </Alert>
+          )}
         </div>
       </div>
     </div>
