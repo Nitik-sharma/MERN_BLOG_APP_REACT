@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import userRouter from "./routes/userRoute.js";
 import signUpRouter from "./routes/authRoute.js";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 // contant------->
@@ -16,7 +17,7 @@ var corsOptions = {
   methods: "GET,POST,PUT,DELETE,PATCH,HEAD",
   credentials: true,
 };
-
+app.use(cookieParser());
 app.use(cors(corsOptions));
 
 app.use(express.json());
