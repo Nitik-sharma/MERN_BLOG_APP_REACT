@@ -1,21 +1,27 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  sigInFailure,
+  sigInSucess,
+  signInStart,
+} from "../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 // import axios from "axios";
 function SignIn() {
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
 
-  const [loading, setLoading] = useState(false);
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const naviagate = useNavigate();
   const handleData = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
   const handleSubmit = async (e) => {
-    setLoading(true);
+    dispatch(signInStart());
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      setErrorMessage("please fill all the feild");
+      dispatch(sigInFailure("please fill all the feild"));
     }
 
     try {
@@ -27,16 +33,17 @@ function SignIn() {
       const data = await res.json();
       console.log("data-->", data); // Log the response data
       if (data.sucess === false) {
-        setErrorMessage(data.message);
+        dispatch(sigInFailure(data.message));
       }
-      setLoading(false);
+
       if (res.ok) {
+        dispatch(sigInSucess(data));
         naviagate("/");
       }
 
       // Handle the response data as needed
     } catch (error) {
-      setErrorMessage(error.message);
+      dispatch(sigInFailure(error.message));
     }
   };
   return (
